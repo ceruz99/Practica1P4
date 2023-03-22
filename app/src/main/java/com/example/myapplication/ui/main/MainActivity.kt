@@ -5,19 +5,27 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
-
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val view = mainBinding.root;
         setContentView(view)
 
+        val calcularObserver = Observer<Double>{resultado->
+            mainBinding.resultTextview.text=resultado.toString()
+        }
+        mainViewModel.resultado.observe(this,calcularObserver)
 
         var selected1:String="";
         var selected2:String="";
@@ -43,53 +51,8 @@ class MainActivity : AppCompatActivity() {
 
 
         mainBinding.convertButton.setOnClickListener{
-            if(selected1=="Peso"){
-                if(selected2=="Peso"){
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else if(selected2=="Dolar"){
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *= 0.00021;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else{
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *= 0.00019;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-            }
-            else if(selected1=="Dolar"){
-                if(selected2=="Dolar"){
-                    var resultado:Double= mainBinding.valorTextview.text.toString().toDouble()
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else if(selected2=="Peso"){
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *= 4813.43;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else{
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *=0.93;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-            }
-            else{
-                if(selected2=="Euro"){
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else if(selected2=="Peso"){
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *= 5184.59;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
-                else{
-                    var resultado= mainBinding.valorTextview.text.toString().toDouble()
-                    resultado *=1.08;
-                    mainBinding.resultTextview.text=resultado.toString()
-                }
+            if(mainBinding.valorTextview.text.toString().isDigitsOnly()){
+                mainViewModel.calcular(selected1,selected2,mainBinding.valorTextview.text.toString().toDouble())
             }
         }
     }
