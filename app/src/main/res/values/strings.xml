@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Cambio de moneda</string>
+    <string name="Value">Valor</string>
+    <string name="Convert">Convertir a</string>
+    <string name="ResultTextView">Resultado:</string>
+    <string name="ConvertirButon">Convertir</string>
+
+    <string-array name="opciones">
+        <item>Peso</item>
+        <item>Dolar</item>
+        <item>Euro</item>
+    </string-array>
+</resources>
